@@ -1,48 +1,32 @@
 import React, { ChangeEvent, FC, useState } from 'react';
-import { ITask } from './model/task';
 import './App.css';
-import ToDoLits from './components/ToDoLits';
+import Header from './components/Header';
+import Tasks from './components/Tasks';
+
 
 const App: FC = () => {
-  const [task, setTask] = useState<string>("");
-  const [deadLine, setDeadLine] = useState<number>(0);
-  const [toDoList, setToDoList] = useState<ITask[]>([]);
 
-  const handleChangeTask = (event: ChangeEvent<HTMLInputElement>) : void => {
-      setTask(event.target.value);
-  }
-  const handleChangeDeadLine = (event: ChangeEvent<HTMLInputElement>) : void => {
-      setDeadLine(Number(event.target.value))
-  }
-  
+const [tasks , setTasks]=useState([
+  {id : 1 , title : "do homework" , time : "3 hours"},
+  {id : 2 , title : "do yoga" , time : "1 hours"},
+  {id : 3 , title : "watch TV" , time : "2 hours"},
+]);
 
-  const addTask =()=>{
-    const newTask = {
-      taskName : task , 
-      deadline : deadLine
-    }
-    setToDoList([...toDoList , newTask]);
-    setTask("");
-    setDeadLine(0);
-  }
-
-
+const deleteItem = (id)=>{
+  setTasks(tasks.filter(task=>{
+    return task.id !== id;
+  })) 
+}
   return (
-    <div className="App">
-      <div className="header">
-        <div className="inputContainer">
-          <input type="text" placeholder="Task...." onChange={handleChangeTask} name="task" value={task}/>
-          <input type="number" placeholder="Deadline (in days)" onChange={handleChangeDeadLine} name="deadLine" value={deadLine}/>
+    <>
+        <div className="app-container">
+          <Header />
+          {tasks.length === 0 ? "There is No Task Here" : <Tasks onDelete={deleteItem} tasks = {tasks} />}
+        
         </div>
-        <button onClick={addTask}>
-          Add Task
-        </button>
-      </div>
-      <div className="toDoList">
-           {<ToDoLits task={toDoList}/>}
-      </div>
 
-    </div>
+
+    </>
   );
 }
 
